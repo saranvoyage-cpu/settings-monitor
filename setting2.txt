@@ -1,5 +1,4 @@
 This is the output of file
 Modification for test one
 again
-1
-2
+I have changed the file for testing purpose
