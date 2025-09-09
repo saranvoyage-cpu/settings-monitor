@@ -3,7 +3,7 @@ name: Notify on Sensitive File Change
 on:
   push:
     paths:
-      - 'setting2.text'  # Only this file triggers the workflow
+      - 'setting2.txt' 
 
 jobs:
   notify:
