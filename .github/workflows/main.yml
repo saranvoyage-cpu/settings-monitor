@@ -3,7 +3,7 @@ name: Notify on Sensitive File Change
 on:
   push:
     paths:
-      - 'setting2.txt'  # ✅ Correct file extension
+      - 'setting2.txt'  
 
 jobs:
   notify:
