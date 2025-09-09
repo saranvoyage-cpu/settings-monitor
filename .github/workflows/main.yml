@@ -1,0 +1,45 @@
+name: Notify on File Change
+
+on:
+  push:
+    paths:
+      - 'setting1.txt'
+      - 'setting2.text'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install msmtp (Simple SMTP client)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y msmtp
+
+      - name: Configure and Send Email Notification
+        env:
+          SMTP_SERVER: smtp.gmail.com
+          SMTP_PORT: 587
+          SMTP_USERNAME: saranraj19don@gmail.com
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          TO_EMAIL: saranraj19don@gmail.com
+        run: |
+          echo "defaults
+          auth on
+          tls on
+          tls_trust_file /etc/ssl/certs/ca-certificates.crt
+          logfile ~/.msmtp.log
+
+          account default
+          host $SMTP_SERVER
+          port $SMTP_PORT
+          from $SMTP_USERNAME
+          user $SMTP_USERNAME
+          password $SMTP_PASSWORD" > ~/.msmtprc
+
+          chmod 600 ~/.msmtprc
+
+          echo -e "Subject: ⚠️ GitHub File Change Alert\n\nOne of the monitored files (setting1.txt or setting2.text) was modified in the repository.\n\n📌 Repository: $GITHUB_REPOSITORY\n🔀 Commit: $GITHUB_SHA\n👤 Changed by: $GITHUB_ACTOR" | msmtp $TO_EMAIL
