@@ -1,13 +1,45 @@
-name: Test Sensitive File Change
+name: Notify on Sensitive File Change
 
 on:
   push:
     paths:
-      - 'setting2.txt'
+      - 'setting2.txt'  # ✅ Correct file extension
 
 jobs:
-  test-notify:
+  notify:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Confirm trigger
-        run: echo "✅ Workflow triggered for setting2.txt change!"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install msmtp (Simple SMTP client)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y msmtp
+
+      - name: Configure and Send Email Notification
+        env:
+          SMTP_SERVER: smtp.gmail.com
+          SMTP_PORT: 587
+          SMTP_USERNAME: saranraj19don@gmail.com
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          TO_EMAIL: saranraj19don@gmail.com
+        run: |
+          echo "defaults
+          auth on
+          tls on
+          tls_trust_file /etc/ssl/certs/ca-certificates.crt
+          logfile ~/.msmtp.log
+
+          account default
+          host $SMTP_SERVER
+          port $SMTP_PORT
+          from $SMTP_USERNAME
+          user $SMTP_USERNAME
+          password $SMTP_PASSWORD" > ~/.msmtprc
+
+          chmod 600 ~/.msmtprc
+
+          echo -e "Subject: 🚨 Sensitive File Changed Alert\n\nThe file 'setting2.txt' was modified in the repository.\n\n📌 Repository: $GITHUB_REPOSITORY\n🔀 Commit: $GITHUB_SHA\n👤 Changed by: $GITHUB_ACTOR" | msmtp $TO_EMAIL
+
