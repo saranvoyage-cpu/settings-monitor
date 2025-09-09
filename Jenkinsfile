@@ -10,14 +10,6 @@ pipeline {
     }
 
     stages {
-        stage('Install msmtp') {
-            steps {
-                sh '''
-                    sudo dnf install -y msmtp
-                '''
-            }
-        }
-
         stage('Checkout') {
             steps {
                 checkout scm
