@@ -1,10 +1,9 @@
-name: Notify on File Change
+name: Notify on Sensitive File Change
 
 on:
   push:
     paths:
-      - 'setting1.txt'
-      - 'setting2.text'
+      - 'setting2.text'  # Only this file triggers the workflow
 
 jobs:
   notify:
@@ -42,4 +41,4 @@ jobs:
 
           chmod 600 ~/.msmtprc
 
-          echo -e "Subject: ⚠️ GitHub File Change Alert\n\nOne of the monitored files (setting1.txt or setting2.text) was modified in the repository.\n\n📌 Repository: $GITHUB_REPOSITORY\n🔀 Commit: $GITHUB_SHA\n👤 Changed by: $GITHUB_ACTOR" | msmtp $TO_EMAIL
+          echo -e "Subject: 🚨 Sensitive File Changed Alert\n\nThe file 'setting2.text' was modified in the repository.\n\n📌 Repository: $GITHUB_REPOSITORY\n🔀 Commit: $GITHUB_SHA\n👤 Changed by: $GITHUB_ACTOR" | msmtp $TO_EMAIL
