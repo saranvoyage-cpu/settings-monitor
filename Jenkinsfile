@@ -7,7 +7,7 @@ pipeline {
         SMTP_USERNAME = 'saranraj19don@gmail.com'
         SMTP_PASSWORD = credentials('SMTP_PASSWORD')
         TO_EMAIL = 'saranraj19don@gmail.com'
-        MSPMTP_PATH = '/usr/bin/msmtp'
+        MSPMTP_PATH = '/bin/msmtp'
     }
 
     stages {
@@ -50,4 +50,5 @@ password ${SMTP_PASSWORD}" > ~/.msmtprc
         }
     }
 }
+
 
